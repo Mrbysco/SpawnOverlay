@@ -3,6 +3,7 @@ package com.mrbysco.spawnoverlay;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
 import com.mrbysco.spawnoverlay.keybind.KeybindHandler;
 import com.mrbysco.spawnoverlay.keybind.ModKeymaps;
+import com.mrbysco.spawnoverlay.network.SetKnownStructurePayload;
 import com.mrbysco.spawnoverlay.optimizer.OptimizerInstance;
 import com.mrbysco.spawnoverlay.optimizer.OptimizerPoller;
 import com.mrbysco.spawnoverlay.optimizer.OptimizerRenderer;
@@ -10,12 +11,14 @@ import com.mrbysco.spawnoverlay.overlay.OverlayColor;
 import com.mrbysco.spawnoverlay.overlay.OverlayInstance;
 import com.mrbysco.spawnoverlay.overlay.OverlayPoller;
 import com.mrbysco.spawnoverlay.overlay.OverlayRenderer;
+import com.mrbysco.spawnoverlay.structure.StructureData;
 import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
 import fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 import net.neoforged.fml.config.ModConfig;
 
@@ -42,6 +45,9 @@ public class SpawnOverlayClient implements ClientModInitializer {
 		KeyMappingHelper.registerKeyMapping(ModKeymaps.TOGGLE_OPTIMIZER);
 		KeyMappingHelper.registerKeyMapping(ModKeymaps.TOGGLE_STRUCTURE_MODE);
 
+		ClientPlayNetworking.registerGlobalReceiver(SetKnownStructurePayload.ID, (payload, context) -> {
+			StructureData.setKnownStructure(payload.structure().orElse(null), payload.boxes().orElse(null));
+		});
 	}
 
 	private void setup() {
