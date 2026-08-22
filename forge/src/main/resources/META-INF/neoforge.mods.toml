@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+issueTrackerURL="https://github.com/Mrbysco/SpawnOverlay/issues"
+license="MIT"
+
+[[mods]]
+modId="spawnoverlay"
+version="${file.jarVersion}"
+displayName="Spawn Overlay"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/spawn-overlay"
+authors="Mrbysco"
+description='''
+Yet another overlay mod ;)
+'''
+[[dependencies.spawnoverlay]]
+modId="minecraft"
+type="required"
+versionRange="[26.2,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.spawnoverlay]]
+modId="neoforge"
+type="required"
+versionRange="[26.2.0.1-beta,)"
+ordering="NONE"
+side="BOTH"

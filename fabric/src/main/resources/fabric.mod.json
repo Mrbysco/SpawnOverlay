@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "spawnoverlay",
+  "version": "${version}",
+  "name": "Spawn Overlay",
+  "description": "Yet another overlay mod ;)",
+  "authors": [
+    "Mrbysco"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/spawn-overlay",
+    "sources": "https://github.com/Mrbysco/SpawnOverlay",
+    "issues": "https://github.com/Mrbysco/SpawnOverlay/issues"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "com.mrbysco.spawnoverlay.datagen.SpawnDatagen"
+    ],
+    "main": [
+      "com.mrbysco.spawnoverlay.SpawnOverlay"
+    ],
+    "client": [
+      "com.mrbysco.spawnoverlay.SpawnOverlayClient"
+    ],
+    "modmenu": [
+      "com.mrbysco.spawnoverlay.config.OverlayConfigMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "spawnoverlay.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.19.3",
+    "minecraft": "~26.2",
+    "java": ">=25",
+    "fabric-api": "*",
+    "forgeconfigapiport": ">=26.2"
+  }
+}
+  
