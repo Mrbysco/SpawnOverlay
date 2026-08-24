@@ -10,7 +10,7 @@ displayName="Spawn Overlay"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/spawn-overlay"
 authors="Mrbysco"
 description='''
-Yet another overlay mod ;)
+A customizable overlay mod focused on mob spawns
 '''
 [[dependencies.spawnoverlay]]
 modId="minecraft"

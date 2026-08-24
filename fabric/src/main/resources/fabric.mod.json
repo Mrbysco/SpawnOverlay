@@ -3,7 +3,7 @@
   "id": "spawnoverlay",
   "version": "${version}",
   "name": "Spawn Overlay",
-  "description": "Yet another overlay mod ;)",
+  "description": "A customizable overlay mod focused on mob spawns",
   "authors": [
     "Mrbysco"
   ],
