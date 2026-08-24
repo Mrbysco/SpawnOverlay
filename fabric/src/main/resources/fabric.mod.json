@@ -5,7 +5,7 @@
   "name": "Spawn Overlay",
   "description": "A customizable overlay mod focused on mob spawns",
   "authors": [
-    "Mrbysco"
+    "Mrbysco", "ShyNieke"
   ],
   "contact": {
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/spawn-overlay",
@@ -13,6 +13,7 @@
     "issues": "https://github.com/Mrbysco/SpawnOverlay/issues"
   },
   "license": "MIT",
+  "icon": "icon.png",
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [

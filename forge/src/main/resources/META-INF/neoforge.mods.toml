@@ -8,10 +8,11 @@ modId="spawnoverlay"
 version="${file.jarVersion}"
 displayName="Spawn Overlay"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/spawn-overlay"
-authors="Mrbysco"
+authors="Mrbysco, ShyNieke"
 description='''
 A customizable overlay mod focused on mob spawns
 '''
+iconFile="icon.png"
 [[dependencies.spawnoverlay]]
 modId="minecraft"
 type="required"
