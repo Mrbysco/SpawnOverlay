@@ -1,12 +1,11 @@
 package com.mrbysco.spawnoverlay.optimizer.rule;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 
 public class SpiderRule implements SpawnRule {
 	@Override
 	public EntityType<?> entityType() {
-		return EntityTypes.SPIDER;
+		return EntityType.SPIDER;
 	}
 
 	@Override

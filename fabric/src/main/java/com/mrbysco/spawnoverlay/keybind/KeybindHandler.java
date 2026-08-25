@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 public class KeybindHandler {
 
 	public static void onKeyPress(Minecraft minecraft) {
-		if (minecraft.gui.screen() != null) return;
+		if (minecraft.screen != null) return;
 
 		if (InputConstants.isKeyDown(minecraft.getWindow(), 292)) return;
 

@@ -5,7 +5,6 @@ import com.mrbysco.spawnoverlay.platform.Services;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,7 +52,7 @@ public class SpawnChecks {
 	public static boolean isAlwaysSpawnable(ClientLevel level, BlockPos pos) {
 		boolean ignorePeacefulBiomes = OverlayConfig.CLIENT.ignorePeacefulBiomes.get();
 		if (ignorePeacefulBiomes && level.getBiome(pos).is(Services.PLATFORM.getPeacefulTag())) return false;
-		return passesLightCheck(level, pos) && isValidSpawnBlock(level, pos, EntityTypes.ZOMBIE);
+		return passesLightCheck(level, pos) && isValidSpawnBlock(level, pos, EntityType.ZOMBIE);
 	}
 
 	/**
@@ -67,7 +66,7 @@ public class SpawnChecks {
 		boolean ignorePeacefulBiomes = OverlayConfig.CLIENT.ignorePeacefulBiomes.get();
 		if (ignorePeacefulBiomes && level.getBiome(pos).is(Services.PLATFORM.getPeacefulTag())) return false;
 		return passesLightCheck(level, pos)
-				&& isValidSpawnBlock(level, pos, EntityTypes.ZOMBIE);
+				&& isValidSpawnBlock(level, pos, EntityType.ZOMBIE);
 	}
 
 	/**
@@ -87,7 +86,7 @@ public class SpawnChecks {
 			BlockState state = level.getBlockState(spawnPos);
 			FluidState fluid = level.getFluidState(spawnPos);
 
-			if (NaturalSpawner.isValidEmptySpawnBlock(level, spawnPos, state, fluid, EntityTypes.PHANTOM)) {
+			if (NaturalSpawner.isValidEmptySpawnBlock(level, spawnPos, state, fluid, EntityType.PHANTOM)) {
 				return true;
 			}
 		}
