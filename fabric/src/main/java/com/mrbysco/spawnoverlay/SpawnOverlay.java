@@ -28,7 +28,7 @@ import java.util.UUID;
 public class SpawnOverlay implements ModInitializer {
 	@Override
 	public void onInitialize() {
-		PayloadTypeRegistry.clientboundPlay().register(SetKnownStructurePayload.ID, SetKnownStructurePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(SetKnownStructurePayload.ID, SetKnownStructurePayload.CODEC);
 
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			for (var player : server.getPlayerList().getPlayers())
@@ -54,17 +54,17 @@ public class SpawnOverlay implements ModInitializer {
 			ResourceKey<Structure> foundStructure = null;
 			List<BoundingBox> foundBoxes = null;
 
-			ChunkPos chunkPos = ChunkPos.containing(playerPos);
+			ChunkPos chunkPos = new ChunkPos(playerPos);
 			int chunkRadius = 2;
 			for (int x = -chunkRadius; x <= chunkRadius; x++) {
 				for (int z = -chunkRadius; z <= chunkRadius; z++) {
-					BlockPos checkedPos = new BlockPos((chunkPos.x() + x) << 4, playerPos.getY(), (chunkPos.z() + z) << 4);
+					BlockPos checkedPos = new BlockPos((chunkPos.x + x) << 4, playerPos.getY(), (chunkPos.z + z) << 4);
 					Map<Structure, LongSet> structures = serverLevel.structureManager().getAllStructuresAt(checkedPos);
 					for (Map.Entry<Structure, LongSet> entry : structures.entrySet()) {
 						Structure structure = entry.getKey();
 						StructureStart start = serverLevel.structureManager().getStructureWithPieceAt(checkedPos, structure);
 						if (start != StructureStart.INVALID_START && start.getBoundingBox().inflatedBy(15).isInside(playerPos)) {
-							foundStructure = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getResourceKey(structure).orElse(null);
+							foundStructure = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getResourceKey(structure).orElse(null);
 							List<BoundingBox> boxes = new ArrayList<>();
 							start.getPieces().forEach(piece -> boxes.add(piece.getBoundingBox()));
 							foundBoxes = boxes;

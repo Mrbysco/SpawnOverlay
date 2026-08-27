@@ -58,8 +58,8 @@ public class OverlayPoller extends Thread {
 
 		ClientLevel level = mc.level;
 		int playerPosY = (int) Math.floor(mc.player.getY());
-		int playerChunkX = mc.player.chunkPosition().x();
-		int playerChunkZ = mc.player.chunkPosition().z();
+		int playerChunkX = mc.player.chunkPosition().x;
+		int playerChunkZ = mc.player.chunkPosition().z;
 
 		for (int chunkX = playerChunkX - radius; chunkX <= playerChunkX + radius; chunkX++) {
 			for (int chunkZ = playerChunkZ - radius; chunkZ <= playerChunkZ + radius; chunkZ++) {
@@ -112,7 +112,7 @@ public class OverlayPoller extends Thread {
 		int posX = (chunkX << 4) + offsetX;
 		int posZ = (chunkZ << 4) + offsetZ;
 		int maxY = playerPosY + 4;
-		int minY = Math.max(playerPosY - 40, level.getMinY());
+		int minY = Math.max(playerPosY - 40, level.getMinBuildHeight());
 
 		BlockState preBlockState;
 		BlockState curBlockState = chunk.getBlockState(new BlockPos(offsetX, maxY, offsetZ));
@@ -142,7 +142,7 @@ public class OverlayPoller extends Thread {
 
 			double offsetY = 0;
 			if (preBlock == Blocks.SNOW || curBlockState.is(BlockTags.WOOL_CARPETS)) {
-				offsetY = preBlockState.getOffset(curPos).y;
+				offsetY = preBlockState.getOffset(level, curPos).y;
 				if (offsetY >= 0.15)
 					continue; // Snow layer too high
 			}

@@ -15,7 +15,6 @@ import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 public class KeybindHandler {
 	@SubscribeEvent
 	public static void registerKeymapping(final RegisterKeyMappingsEvent event) {
-		event.registerCategory(ModKeymaps.CATEGORY);
 		event.register(ModKeymaps.TOGGLE_RENDER);
 		event.register(ModKeymaps.TOGGLE_OPTIMIZER);
 		event.register(ModKeymaps.TOGGLE_STRUCTURE_MODE);
@@ -40,7 +39,7 @@ public class KeybindHandler {
 				Component toggleComponent = OverlayInstance.structureMode ?
 						Component.translatable("spawnoverlay.toggle_structure_mode.enabled").withStyle(ChatFormatting.GREEN) :
 						Component.translatable("spawnoverlay.toggle_structure_mode.disabled").withStyle(ChatFormatting.RED);
-				mc.player.sendOverlayMessage(Component.translatable("spawnoverlay.toggle_structure_mode.message", toggleComponent));
+				mc.player.displayClientMessage(Component.translatable("spawnoverlay.toggle_structure_mode.message", toggleComponent), true);
 			}
 		}
 	}

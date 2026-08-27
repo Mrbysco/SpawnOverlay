@@ -26,7 +26,7 @@ public class SpawnChecks {
 		}
 
 		int brightness = level.getMaxLocalRawBrightness(pos, 11);
-		return brightness <= level.dimensionType().monsterSpawnLightTest().maxInclusive();
+		return brightness <= level.dimensionType().monsterSpawnLightTest().getMaxValue();
 	}
 
 	/**

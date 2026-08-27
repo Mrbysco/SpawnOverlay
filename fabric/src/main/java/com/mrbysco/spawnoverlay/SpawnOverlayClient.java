@@ -12,38 +12,38 @@ import com.mrbysco.spawnoverlay.overlay.OverlayInstance;
 import com.mrbysco.spawnoverlay.overlay.OverlayPoller;
 import com.mrbysco.spawnoverlay.overlay.OverlayRenderer;
 import com.mrbysco.spawnoverlay.structure.StructureData;
-import fuzs.forgeconfigapiport.fabric.api.v5.ConfigRegistry;
-import fuzs.forgeconfigapiport.fabric.api.v5.ModConfigEvents;
+import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeConfigRegistry;
+import fuzs.forgeconfigapiport.fabric.api.neoforge.v4.NeoForgeModConfigEvents;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.neoforged.fml.config.ModConfig;
 
 public class SpawnOverlayClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
-		ConfigRegistry.INSTANCE.register(Reference.MOD_ID, ModConfig.Type.CLIENT, OverlayConfig.clientSpec);
-		ModConfigEvents.loading(Reference.MOD_ID).register(this::onLoadConfig);
-		ModConfigEvents.reloading(Reference.MOD_ID).register(this::onLoadConfig);
+		NeoForgeConfigRegistry.INSTANCE.register(Reference.MOD_ID, ModConfig.Type.CLIENT, OverlayConfig.clientSpec);
+		NeoForgeModConfigEvents.loading(Reference.MOD_ID).register(this::onLoadConfig);
+		NeoForgeModConfigEvents.reloading(Reference.MOD_ID).register(this::onLoadConfig);
 
 		ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
 			setup();
 			OverlayColor.updateColors();
 		});
 
-		LevelRenderEvents.COLLECT_SUBMITS.register(context -> {
+		WorldRenderEvents.AFTER_TRANSLUCENT.register(context -> {
 			OverlayRenderer.submitCustomGeometry(context);
 			OptimizerRenderer.submitCustomGeometry(context);
 		});
 
 		ClientTickEvents.END_CLIENT_TICK.register(KeybindHandler::onKeyPress);
 
-		KeyMappingHelper.registerKeyMapping(ModKeymaps.TOGGLE_RENDER);
-		KeyMappingHelper.registerKeyMapping(ModKeymaps.TOGGLE_OPTIMIZER);
-		KeyMappingHelper.registerKeyMapping(ModKeymaps.TOGGLE_STRUCTURE_MODE);
+		KeyBindingHelper.registerKeyBinding(ModKeymaps.TOGGLE_RENDER);
+		KeyBindingHelper.registerKeyBinding(ModKeymaps.TOGGLE_OPTIMIZER);
+		KeyBindingHelper.registerKeyBinding(ModKeymaps.TOGGLE_STRUCTURE_MODE);
 
 		ClientPlayNetworking.registerGlobalReceiver(SetKnownStructurePayload.ID, (payload, context) -> {
 			StructureData.setKnownStructure(payload.structure().orElse(null), payload.boxes().orElse(null));

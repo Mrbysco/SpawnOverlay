@@ -12,7 +12,7 @@ public class KeybindHandler {
 	public static void onKeyPress(Minecraft minecraft) {
 		if (minecraft.screen != null) return;
 
-		if (InputConstants.isKeyDown(minecraft.getWindow(), 292)) return;
+		if (InputConstants.isKeyDown(minecraft.getWindow().getWindow(), 292)) return;
 
 		Minecraft mc = Minecraft.getInstance();
 		if (ModKeymaps.TOGGLE_RENDER.consumeClick()) {
@@ -31,7 +31,7 @@ public class KeybindHandler {
 				Component toggleComponent = OverlayInstance.structureMode ?
 						Component.translatable("spawnoverlay.toggle_structure_mode.enabled").withStyle(ChatFormatting.GREEN) :
 						Component.translatable("spawnoverlay.toggle_structure_mode.disabled").withStyle(ChatFormatting.RED);
-				mc.player.sendOverlayMessage(Component.translatable("spawnoverlay.toggle_structure_mode.message", toggleComponent));
+				mc.player.displayClientMessage(Component.translatable("spawnoverlay.toggle_structure_mode.message", toggleComponent), true);
 			}
 		}
 	}

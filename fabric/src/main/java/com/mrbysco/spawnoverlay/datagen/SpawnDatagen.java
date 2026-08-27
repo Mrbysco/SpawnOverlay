@@ -3,10 +3,10 @@ package com.mrbysco.spawnoverlay.datagen;
 import com.mrbysco.spawnoverlay.Reference;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -20,7 +20,7 @@ public class SpawnDatagen implements DataGeneratorEntrypoint {
 
 	public static class SpawnLanguageProvider extends FabricLanguageProvider {
 
-		public SpawnLanguageProvider(FabricPackOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+		public SpawnLanguageProvider(FabricDataOutput dataOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
 			super(dataOutput, registryLookup);
 		}
 

@@ -36,7 +36,7 @@ public class OptimizerPoller extends Thread {
 		int playerPosY = (int) Math.floor(mc.player.getY());
 		int radius = 64;
 		int maxY = playerPosY + 4;
-		int minY = Math.max(playerPosY - 40, level.getMinY());
+		int minY = Math.max(playerPosY - 40, level.getMinBuildHeight());
 
 		SpawnRule spawnRule = OverlayConfig.CLIENT.optimizerType.get().getRule();
 		int requiredWidth = spawnRule.requiredWidth();

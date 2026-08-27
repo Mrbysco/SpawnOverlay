@@ -2,46 +2,49 @@ package com.mrbysco.spawnoverlay.overlay;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mrbysco.spawnoverlay.Reference;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
 import com.mrbysco.spawnoverlay.rendertype.SpawnRenderTypes;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import com.mrbysco.spawnoverlay.util.ColorParser;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.util.ARGB;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 
 public class OverlayRenderer {
-	public static void submitCustomGeometry(LevelRenderContext context) {
+	public static void submitCustomGeometry(WorldRenderContext context) {
 		if (OverlayInstance.active) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null)
 				return;
 
-			SubmitNodeCollector nodeCollector = context.submitNodeCollector();
-			PoseStack poseStack = context.poseStack();
-			Vec3 camera = context.levelState().cameraRenderState.pos;
+			final Minecraft minecraft = Minecraft.getInstance();
+			RenderBuffers renderBuffers = minecraft.renderBuffers();
+			MultiBufferSource.BufferSource bufferSource = renderBuffers.bufferSource();
+			PoseStack poseStack = context.matrixStack();
+			Vec3 camera = context.camera().getPosition();
 
 			poseStack.pushPose();
 			poseStack.translate(-camera.x, -camera.y, -camera.z);
 
 			RenderType renderType = SpawnRenderTypes.TRANSLUCENT;
 			OverlayType overlayType = OverlayConfig.CLIENT.overlayType.get();
-			nodeCollector.submitCustomGeometry(poseStack, renderType, (pose, vertexConsumer) -> {
-				var overlays = OverlayInstance.poller.overlays;
-				for (ArrayList<Overlay>[] overlay : overlays) {
-					for (ArrayList<Overlay> overlayArrayList : overlay) {
-						for (Overlay u : overlayArrayList) {
-							drawOverlay(vertexConsumer, pose, u, overlayType);
-						}
+			VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
+
+			var overlays = OverlayInstance.poller.overlays;
+			for (ArrayList<Overlay>[] overlay : overlays) {
+				for (ArrayList<Overlay> overlayArrayList : overlay) {
+					for (Overlay u : overlayArrayList) {
+						drawOverlay(vertexConsumer, poseStack.last(), u, overlayType);
 					}
 				}
-			});
+			}
 
+			bufferSource.endBatch(renderType);
 			poseStack.popPose();
 		}
 	}
@@ -70,7 +73,7 @@ public class OverlayRenderer {
 	private static void addQuad(VertexConsumer vertexConsumer, PoseStack.Pose pose,
 	                            float x1, float y, float z1, float x2, float z2,
 	                            int color) {
-		int abgr = ARGB.toABGR(color);
+		int abgr = ColorParser.toABGR(color);
 		vertexConsumer.addVertex(pose, x1, y, z1)
 				.setNormal(pose, 0.0F, 1.0F, 0.0F)
 				.setColor(abgr);

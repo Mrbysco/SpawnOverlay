@@ -1,7 +1,6 @@
 package com.mrbysco.spawnoverlay.datagen;
 
 import com.mrbysco.spawnoverlay.Reference;
-import com.mrbysco.spawnoverlay.SpawnOverlayClient;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.api.distmarker.Dist;
@@ -9,12 +8,12 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.jspecify.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class SpawnDatagen {
 	@SubscribeEvent
-	public static void gatherData(GatherDataEvent.Client event) {
+	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
 		PackOutput packOutput = generator.getPackOutput();
 

@@ -1,19 +1,24 @@
 package com.mrbysco.spawnoverlay.rendertype;
 
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.rendertype.LayeringTransform;
-import net.minecraft.client.renderer.rendertype.OutputTarget;
-import net.minecraft.client.renderer.rendertype.RenderSetup;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.renderer.RenderType;
 
-public class SpawnRenderTypes {
+public abstract class SpawnRenderTypes extends RenderType {
 
-	public static final RenderType TRANSLUCENT = RenderType.create(
+	public SpawnRenderTypes(String p_173178_, VertexFormat p_173179_, VertexFormat.Mode p_173180_, int p_173181_, boolean p_173182_, boolean p_173183_, Runnable p_173184_, Runnable p_173185_) {
+		super(p_173178_, p_173179_, p_173180_, p_173181_, p_173182_, p_173183_, p_173184_, p_173185_);
+	}
+
+	public static final RenderType.CompositeRenderType TRANSLUCENT = create(
 			"spawnoverlay:translucent",
-			RenderSetup.builder(RenderPipelines.DEBUG_QUADS)
-					.setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
-					.setOutputTarget(OutputTarget.ITEM_ENTITY_TARGET)
-					.createRenderSetup()
+			DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 1536,
+			false,
+			true,
+			RenderType.CompositeState.builder()
+					.setShaderState(POSITION_COLOR_SHADER)
+					.setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+					.setCullState(NO_CULL)
+					.createCompositeState(false)
 	);
-
 }

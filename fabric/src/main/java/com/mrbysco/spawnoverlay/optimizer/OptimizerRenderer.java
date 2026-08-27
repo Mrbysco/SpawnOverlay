@@ -5,40 +5,42 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
 import com.mrbysco.spawnoverlay.rendertype.SpawnRenderTypes;
 import com.mrbysco.spawnoverlay.util.ColorParser;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
 
 public class OptimizerRenderer {
 
-	public static void submitCustomGeometry(LevelRenderContext context) {
+	public static void submitCustomGeometry(WorldRenderContext context) {
 		if (OptimizerInstance.active) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null)
 				return;
 
-			SubmitNodeCollector nodeCollector = context.submitNodeCollector();
-			PoseStack poseStack = context.poseStack();
-			Vec3 camera = context.levelState().cameraRenderState.pos;
+			final Minecraft minecraft = Minecraft.getInstance();
+			RenderBuffers renderBuffers = minecraft.renderBuffers();
+			MultiBufferSource.BufferSource bufferSource = renderBuffers.bufferSource();
+			PoseStack poseStack = context.matrixStack();
+			Vec3 camera = context.camera().getPosition();
 
 			poseStack.pushPose();
 			poseStack.translate(-camera.x, -camera.y, -camera.z);
 
 			RenderType renderType = SpawnRenderTypes.TRANSLUCENT;
+			VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
 			int color = ColorParser.parse(OverlayConfig.CLIENT.optimizerColor.get());
 
-			nodeCollector.submitCustomGeometry(poseStack, renderType, (pose, vertexConsumer) -> {
-				var overlays = OptimizerInstance.poller.positions;
-				for (BlockPos slabPosition : overlays) {
-					drawSlab(vertexConsumer, pose, slabPosition, color);
-				}
-			});
+			var overlays = OptimizerInstance.poller.positions;
+			for (BlockPos slabPosition : overlays) {
+				drawSlab(vertexConsumer, poseStack.last(), slabPosition, color);
+			}
 
+			bufferSource.endBatch(renderType);
 			poseStack.popPose();
 		}
 	}
@@ -73,7 +75,7 @@ public class OptimizerRenderer {
 	                         float x4, float y4, float z4,
 	                         float nx, float ny, float nz,
 	                         int color) {
-		int abgr = ARGB.toABGR(color);
+		int abgr = ColorParser.toABGR(color);
 		vertexConsumer.addVertex(pose, x1, y1, z1)
 				.setNormal(pose, nx, ny, nz)
 				.setColor(abgr);

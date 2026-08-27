@@ -3,51 +3,50 @@ package com.mrbysco.spawnoverlay.optimizer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
+import com.mrbysco.spawnoverlay.overlay.OverlayInstance;
 import com.mrbysco.spawnoverlay.rendertype.SpawnRenderTypes;
 import com.mrbysco.spawnoverlay.util.ColorParser;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.SubmitNodeCollector;
-import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderBuffers;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
+import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 @EventBusSubscriber(Dist.CLIENT)
 public class OptimizerRenderer {
 
 	@SubscribeEvent
-	public static void submitCustomGeometry(SubmitCustomGeometryEvent event) {
-		if (OptimizerInstance.active) {
+	public static void onRenderWorldLast(RenderLevelStageEvent event) {
+		if (event.getStage() == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS && OverlayInstance.active) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null)
 				return;
 
-			SubmitNodeCollector nodeCollector = event.getSubmitNodeCollector();
+			final Minecraft minecraft = Minecraft.getInstance();
+			RenderBuffers renderBuffers = minecraft.renderBuffers();
+			MultiBufferSource.BufferSource bufferSource = renderBuffers.bufferSource();
 			PoseStack poseStack = event.getPoseStack();
-			Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
+			Vec3 camera = event.getCamera().getPosition();
 
 			poseStack.pushPose();
 			poseStack.translate(-camera.x, -camera.y, -camera.z);
 
 			RenderType renderType = SpawnRenderTypes.TRANSLUCENT;
+			VertexConsumer vertexConsumer = bufferSource.getBuffer(renderType);
 			int color = ColorParser.parse(OverlayConfig.CLIENT.optimizerColor.get());
-			int a = ARGB.alpha(color);
-			int r = ARGB.red(color);
-			int g = ARGB.green(color);
-			int b = ARGB.blue(color);
 
-			nodeCollector.submitCustomGeometry(poseStack, renderType, (pose, vertexConsumer) -> {
-				var overlays = OptimizerInstance.poller.positions;
-				for (BlockPos slabPosition : overlays) {
-					drawSlab(vertexConsumer, pose, slabPosition, color);
-				}
-			});
+			var overlays = OptimizerInstance.poller.positions;
+			for (BlockPos slabPosition : overlays) {
+				drawSlab(vertexConsumer, poseStack.last(), slabPosition, color);
+			}
 
+			bufferSource.endBatch(renderType);
 			poseStack.popPose();
 		}
 	}
@@ -82,7 +81,7 @@ public class OptimizerRenderer {
 	                         float x4, float y4, float z4,
 	                         float nx, float ny, float nz,
 	                         int color) {
-		int abgr = ARGB.toABGR(color);
+		int abgr = ColorParser.toABGR(color);
 		vertexConsumer.addVertex(pose, x1, y1, z1)
 				.setNormal(pose, nx, ny, nz)
 				.setColor(abgr);

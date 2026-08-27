@@ -44,7 +44,7 @@ neoForge {
         }
 
         data {
-            clientData()
+            data()
 
             programArguments.addAll(
                     '--mod', "${mod_id}",
