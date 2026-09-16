@@ -62,7 +62,7 @@ public class SpawnOverlay implements ModInitializer {
 					Map<Structure, LongSet> structures = serverLevel.structureManager().getAllStructuresAt(checkedPos);
 					for (Map.Entry<Structure, LongSet> entry : structures.entrySet()) {
 						Structure structure = entry.getKey();
-						StructureStart start = serverLevel.structureManager().getStructureWithPieceAt(checkedPos, structure);
+						StructureStart start = serverLevel.structureManager().getStructureWithPieceAt(checkedPos, holder -> holder.value() == structure);
 						if (start != StructureStart.INVALID_START && start.getBoundingBox().inflatedBy(15).isInside(playerPos)) {
 							foundStructure = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getResourceKey(structure).orElse(null);
 							List<BoundingBox> boxes = new ArrayList<>();

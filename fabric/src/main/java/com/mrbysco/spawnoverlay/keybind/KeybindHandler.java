@@ -12,7 +12,7 @@ public class KeybindHandler {
 	public static void onKeyPress(Minecraft minecraft) {
 		if (minecraft.gui.screen() != null) return;
 
-		if (InputConstants.isKeyDown(minecraft.getWindow(), 292)) return;
+		if (InputConstants.isKeyDown(292)) return;
 
 		Minecraft mc = Minecraft.getInstance();
 		if (ModKeymaps.TOGGLE_RENDER.consumeClick()) {
