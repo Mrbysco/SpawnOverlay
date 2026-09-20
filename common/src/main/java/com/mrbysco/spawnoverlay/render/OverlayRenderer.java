@@ -1,8 +1,11 @@
-package com.mrbysco.spawnoverlay.overlay;
+package com.mrbysco.spawnoverlay.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
+import com.mrbysco.spawnoverlay.overlay.Overlay;
+import com.mrbysco.spawnoverlay.overlay.OverlayInstance;
+import com.mrbysco.spawnoverlay.overlay.OverlayType;
 import com.mrbysco.spawnoverlay.rendertype.SpawnRenderTypes;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -10,25 +13,16 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
 import java.util.ArrayList;
 
-@EventBusSubscriber(Dist.CLIENT)
 public class OverlayRenderer {
-	@SubscribeEvent
-	public static void submitCustomGeometry(SubmitCustomGeometryEvent event) {
+
+	public static void submitCustomGeometry(SubmitNodeCollector nodeCollector, PoseStack poseStack, Vec3 camera) {
 		if (OverlayInstance.active) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null)
 				return;
-
-			SubmitNodeCollector nodeCollector = event.getSubmitNodeCollector();
-			PoseStack poseStack = event.getPoseStack();
-			Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
 
 			poseStack.pushPose();
 			poseStack.translate(-camera.x, -camera.y, -camera.z);

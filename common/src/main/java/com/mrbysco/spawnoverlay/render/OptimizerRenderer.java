@@ -1,8 +1,9 @@
-package com.mrbysco.spawnoverlay.optimizer;
+package com.mrbysco.spawnoverlay.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mrbysco.spawnoverlay.config.OverlayConfig;
+import com.mrbysco.spawnoverlay.optimizer.OptimizerInstance;
 import com.mrbysco.spawnoverlay.rendertype.SpawnRenderTypes;
 import com.mrbysco.spawnoverlay.util.ColorParser;
 import net.minecraft.client.Minecraft;
@@ -12,34 +13,20 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 
-@EventBusSubscriber(Dist.CLIENT)
 public class OptimizerRenderer {
 
-	@SubscribeEvent
-	public static void submitCustomGeometry(SubmitCustomGeometryEvent event) {
+	public static void submitCustomGeometry(SubmitNodeCollector nodeCollector, PoseStack poseStack, Vec3 camera) {
 		if (OptimizerInstance.active) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player == null)
 				return;
-
-			SubmitNodeCollector nodeCollector = event.getSubmitNodeCollector();
-			PoseStack poseStack = event.getPoseStack();
-			Vec3 camera = event.getLevelRenderState().cameraRenderState.pos;
 
 			poseStack.pushPose();
 			poseStack.translate(-camera.x, -camera.y, -camera.z);
 
 			RenderType renderType = SpawnRenderTypes.TRANSLUCENT;
 			int color = ColorParser.parse(OverlayConfig.CLIENT.optimizerColor.get());
-			int a = ARGB.alpha(color);
-			int r = ARGB.red(color);
-			int g = ARGB.green(color);
-			int b = ARGB.blue(color);
 
 			nodeCollector.submitCustomGeometry(poseStack, renderType, (pose, vertexConsumer) -> {
 				var overlays = OptimizerInstance.poller.positions;

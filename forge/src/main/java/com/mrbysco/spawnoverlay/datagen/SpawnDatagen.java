@@ -1,7 +1,6 @@
 package com.mrbysco.spawnoverlay.datagen;
 
 import com.mrbysco.spawnoverlay.Reference;
-import com.mrbysco.spawnoverlay.SpawnOverlayClient;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.api.distmarker.Dist;
