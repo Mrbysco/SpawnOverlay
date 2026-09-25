@@ -10,8 +10,9 @@ public class SpawnRenderTypes {
 	public static final RenderType TRANSLUCENT = RenderType.create(
 			"spawnoverlay:translucent",
 			RenderSetup.builder(RenderPipelines.DEBUG_QUADS)
-					.setOitPipelines(RenderPipelines.OIT_ITEM)
+					.setOitPipelines(RenderPipelines.OIT_DEBUG_QUADS)
 					.setLayeringTransform(LayeringTransform.VIEW_OFFSET_Z_LAYERING)
+					.sortOnUpload()
 					.createRenderSetup()
 	);
 
