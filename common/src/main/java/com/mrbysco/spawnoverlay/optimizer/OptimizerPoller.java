@@ -13,6 +13,10 @@ public class OptimizerPoller extends Thread {
 
 	public volatile List<BlockPos> positions = new ArrayList<>();
 
+	public OptimizerPoller() {
+		setDaemon(true);
+	}
+
 	@Override
 	public void run() {
 		while (true) {

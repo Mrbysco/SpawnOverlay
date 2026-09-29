@@ -23,6 +23,10 @@ public class OverlayPoller extends Thread {
 
 	public volatile ArrayList<Overlay>[][] overlays;
 
+	public OverlayPoller() {
+		setDaemon(true);
+	}
+
 	@Override
 	public void run() {
 		int radius = 0;
