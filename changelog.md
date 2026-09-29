@@ -1,2 +1,1 @@
-* Fix default keybinds
-* Fix crash when improved transparency is enabled
+* Fix issue causing crash upon closing the game
